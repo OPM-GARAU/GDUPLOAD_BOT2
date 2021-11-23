@@ -1,7 +1,7 @@
 import re
 import json
 from httplib2 import Http
-from bot import LOGGER, G_DRIVE_CLIENT_ID, G_DRIVE_CLIENT_SECRET
+from bot import LOGGER, G_DRIVE_CLIENT_ID, G_DRIVE_CLIENT_SECRET, SUDO_USERS
 from bot.config import Messages
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -27,6 +27,9 @@ async def _auth(client, message):
     gDriveDB._set(user_id, creds)
     await message.reply_text(Messages.ALREADY_AUTH, quote=True)
   else:
+    if user_id not in SUDO_USERS:
+      await message.reply_text(text=f"you cant use this bot.\n\ndeploy your own bot:\n[repository_link](https://github.com/prxpostern/GDUPLOAD_BOT2)", quote=True)
+      return
     global flow
     try:
       flow = OAuth2WebServerFlow(
