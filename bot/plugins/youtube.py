@@ -16,7 +16,7 @@ ytregex = re.compile(
 )
 
 #@Client.on_message(filters.regex(ytregex))
-@Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users & filters.regex(ytregex))
+@Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users)
 async def ytdl(_, message):
     
     user_id = message.from_user.id
