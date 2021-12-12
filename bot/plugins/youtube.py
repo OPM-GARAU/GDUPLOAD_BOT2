@@ -56,7 +56,7 @@ async def ytdl(_, message):
     try:
         await asyncio.gather(
             message.reply_photo(
-                thumbnail, caption=title, reply_markup=InlineKeyboardMarkup(buttons), , quote=True
+                thumbnail, caption=title, reply_markup=InlineKeyboardMarkup(buttons), quote=True
             ),
             status.delete(),
         )
