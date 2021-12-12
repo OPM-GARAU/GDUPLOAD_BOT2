@@ -10,6 +10,7 @@ from pyrogram.types import (
 from bot.config import config
 from bot.helpers.util import media_duration, width_and_height
 from bot.helpers.ytdlfunc import yt_download
+from bot.plugins import yt_uploader
 
 logger = logging.getLogger(__name__)
 ytdata = re.compile(r"^(Video|Audio)_(\d{1,3})_(empty|none)_([\w\-]+)$")
@@ -57,7 +58,7 @@ async def catch_youtube_dldata(_, q):
         logger.info("Media not found")
         return
     
-    return file_name
+    await yt_uploader(_ , q.message , file_name)
     """
     thumb = os.path.join(userdir, video_id + ".jpg")
     if not os.path.exists(thumb):
