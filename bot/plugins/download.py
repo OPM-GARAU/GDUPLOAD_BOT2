@@ -311,4 +311,4 @@ async def yt_uploader(client, message , dlpath):
       msg = GoogleDrive(user_id).upload_file(dlpath)
   await sent_message.edit(msg)
   await message.delete()
-  m.reply_text(text=f"you can send new task now !")
+  await m.reply_text(text=f"you can send new task now !")
