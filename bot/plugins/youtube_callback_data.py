@@ -27,11 +27,13 @@ async def catch_youtube_dldata(_, q):
     av_codec = q.matches[0].group(3)
     video_id = q.matches[0].group(4)
 
-    userdir = os.path.join(os.getcwd(), Config.DOWNLOAD_DIR, str(user_id), video_id)
+    userdir = os.path.join(os.getcwd(), config.DOWNLOAD_DIRECTORY, str(user_id), video_id)
 
     if not os.path.isdir(userdir):
         os.makedirs(userdir)
-    await q.edit_message_caption("Downloading...!")
+    
+    logger.info(f"Downloading...!")
+    #await q.edit_message_caption("Downloading...!")
     # await q.edit_message_reply_markup([[InlineKeyboardButton("Processing..")]])
 
     fetch_media, caption = await yt_download(
