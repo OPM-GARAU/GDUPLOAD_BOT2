@@ -17,3 +17,5 @@ aiohttp
 requests
 mega.py
 python-dotenv
+yt_dlp
+hachoir
