@@ -1,3 +1,6 @@
+users = {}
+user_time = {}
+
 class config:
     BOT_TOKEN = ""
     APP_ID = ""
@@ -8,6 +11,10 @@ class config:
     G_DRIVE_CLIENT_ID = ""
     G_DRIVE_CLIENT_SECRET = ""
     SUPPORT_CHAT_LINK = ""
+    TIMEOUT = 0
+    MAX_SIZE = 9 * 1024 * 1024 * 1024
+    CUSTOM_THUMB = None
+    EDIT_TIME = 3
 
 
 class BotCommands:
