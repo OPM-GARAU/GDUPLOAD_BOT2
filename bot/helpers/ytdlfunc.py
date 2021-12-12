@@ -9,7 +9,7 @@ from pyrogram.types import InlineKeyboardButton
 from yt_dlp import YoutubeDL
 from yt_dlp.utils import DownloadError
 
-from ytdlbot import Config
+#from ytdlbot import Config
 from ytdlbot.helper_utils.util import humanbytes
 
 logger = logging.getLogger(__name__)
@@ -69,7 +69,8 @@ async def yt_download(video_id, media_type, av_codec, format_id, output):
         "nooverwrites": True,
         "continuedl": True,
         # "noplaylist": True,
-        "max_filesize": Config.MAX_SIZE,
+        #"max_filesize": Config.MAX_SIZE,
+        "max_filesize": 9 * 1024 * 1024 * 1024,
         "restrictfilenames": True,
         "trim_file_name": 50,
     }
