@@ -297,17 +297,18 @@ async def yt_uploader(client, message , dlpath):
   
   m = message.reply_to_message
   user_id = m.from_user.id
-  sent_message = await message.edit_message_caption(f"**uploading to gd**\n\nFile: `{dlpath}`")
+  sent_message = await m.reply_text(text=f"**uploading to gd**\n\nFile: `{dlpath}`", quote=True)
   msg = GoogleDrive(user_id).upload_file(dlpath)
   if 'rateLimitExceeded' in msg:
-    await sent_message.edit_message_caption(f"{msg}\n\n trying again in 5 sec")
+    await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
     time.sleep(5)
     await sent_message.edit(f"`uploading 2nd ...`")
     msg = GoogleDrive(user_id).upload_file(dlpath)
     if 'rateLimitExceeded' in msg:
-      await sent_message.edit_message_caption(f"{msg}\n\n trying again in 5 sec")
+      await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
       time.sleep(5)
       await sent_message.edit(f"`uploading 3rd ...`")
       msg = GoogleDrive(user_id).upload_file(dlpath)
   await sent_message.edit(msg)
+  await message.delete()
   m.reply_text(text=f"you can send new task now !")
