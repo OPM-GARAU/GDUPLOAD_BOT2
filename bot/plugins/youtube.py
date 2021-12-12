@@ -1,14 +1,13 @@
-import asyncio
-import re
+import asyncio, re
 from datetime import datetime, timedelta
 
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup
 from yt_dlp.utils import DownloadError, ExtractorError
 
-from ytdlbot import Config, user_time
-from ytdlbot.helper_utils.ffmfunc import fetch_thumb
-from ytdlbot.helper_utils.ytdlfunc import extract_formats
+from bot.config import config, user_time
+from bot.helpers.ffmfunc import fetch_thumb
+from bot.helpers.ytdlfunc import extract_formats
 
 ytregex = re.compile(
     r"^((?:https?:)?//)?((?:www|m)\.)?(youtube\.com|youtu.be)(/(?:[\w\-]+\?v=|embed/|v/)?)([\w\-]+)(\S+)?$"
