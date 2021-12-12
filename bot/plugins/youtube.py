@@ -31,7 +31,7 @@ async def ytdl(_, message):
         video_id, thumbnail_url, title, buttons = await extract_formats(url)
 
         now = datetime.now()
-        user_time[user_id] = now + timedelta(minutes=Config.TIMEOUT)
+        user_time[user_id] = now + timedelta(minutes=config.TIMEOUT)
 
     except (DownloadError, ExtractorError) as error:
         await asyncio.gather(
@@ -41,10 +41,10 @@ async def ytdl(_, message):
         return
 
     status = await message.reply_text("Fetching thumbnail...", quote=True)
-    if Config.CUSTOM_THUMB:
-        await asyncio.sleep(Config.EDIT_TIME)
+    if config.CUSTOM_THUMB:
+        await asyncio.sleep(config.EDIT_TIME)
         await status.edit_text("Found Custom thumbnail, Gotta pull it now.")
-        thumbnail_url = Config.CUSTOM_THUMB
+        thumbnail_url = config.CUSTOM_THUMB
     thumbnail = await fetch_thumb(user_id, thumbnail_url, video_id)
     try:
         await asyncio.gather(
