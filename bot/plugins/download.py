@@ -1,8 +1,8 @@
 import os, time, asyncio, re
-from datetime import datetime, timedelta
+#from datetime import datetime, timedelta
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup
-from yt_dlp.utils import DownloadError, ExtractorError
+#from pyrogram.types import InlineKeyboardMarkup
+#from yt_dlp.utils import DownloadError, ExtractorError
 from bot.helpers.sql_helper import gDriveDB, idsDB
 from bot.helpers.utils import CustomFilters, humanbytes
 from bot.helpers.downloader import download_file2, utube_dl
@@ -15,8 +15,8 @@ from pyrogram.errors import FloodWait, RPCError
 from bot.helpers.display_progress import progress_for_pyrogram
 
 #from bot import Config, user_time
-from bot.helpers.ffmfunc import fetch_thumb
-from bot.helpers.ytdlfunc import extract_formats
+#from bot.helpers.ffmfunc import fetch_thumb
+#from bot.helpers.ytdlfunc import extract_formats
 
 @Client.on_message(filters.private & filters.incoming & filters.text & (filters.command(BotCommands.Download) | filters.regex('^(ht|f)tp*')) & CustomFilters.auth_users)
 async def _download(client, message):
@@ -186,7 +186,7 @@ def _telegram_file(client, message):
     os.remove(file_path)
   except:
     pass
-
+"""
 @Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users)
 
 
@@ -222,7 +222,7 @@ def _ytdl(client, message):
       sent_message.edit(Messages.DOWNLOAD_ERROR.format(file_path, link))
   else:
     message.reply_text(Messages.PROVIDE_YTDL_LINK, quote=True)
-
+"""
 @Client.on_message(filters.incoming & filters.private & filters.command(["bbb"]) & CustomFilters.auth_users)
 async def _ru2(client, u):
   if not u.reply_to_message:
