@@ -10,7 +10,7 @@ from pyrogram.types import (
 from bot.config import config
 from bot.helpers.util import media_duration, width_and_height
 from bot.helpers.ytdlfunc import yt_download
-from bot.plugins import yt_uploader
+from bot.plugins.download import yt_uploader
 
 logger = logging.getLogger(__name__)
 ytdata = re.compile(r"^(Video|Audio)_(\d{1,3})_(empty|none)_([\w\-]+)$")
