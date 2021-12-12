@@ -1,8 +1,4 @@
-import asyncio
-import logging
-import os
-import re
-import shutil
+import asyncio, logging, os, re, shutil
 
 from pyrogram import Client, filters
 from pyrogram.types import (
@@ -10,9 +6,10 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 
-from ytdlbot import Config
-from ytdlbot.helper_utils.util import media_duration, width_and_height
-from ytdlbot.helper_utils.ytdlfunc import yt_download
+#from ytdlbot import Config
+from bot.config import config
+from bot.helpers.util import media_duration, width_and_height
+from bot.helpers.ytdlfunc import yt_download
 
 logger = logging.getLogger(__name__)
 ytdata = re.compile(r"^(Video|Audio)_(\d{1,3})_(empty|none)_([\w\-]+)$")
@@ -40,11 +37,13 @@ async def catch_youtube_dldata(_, q):
     fetch_media, caption = await yt_download(
         video_id, media_type, av_codec, format_id, userdir
     )
+    
     if not fetch_media:
         await asyncio.gather(q.message.reply_text(caption), q.message.delete())
         shutil.rmtree(userdir, ignore_errors=True)
         return
     else:
+        logger.info(f'fetch_media: {fetch_media} -- caption: {caption}')
         logger.info(os.listdir(userdir))
         file_name = None
         for content in os.listdir(userdir):
@@ -55,7 +54,9 @@ async def catch_youtube_dldata(_, q):
         await asyncio.gather(q.message.reply_text("Failed"), q.message.delete())
         logger.info("Media not found")
         return
-
+    
+    return fetch_media
+    """
     thumb = os.path.join(userdir, video_id + ".jpg")
     if not os.path.exists(thumb):
         thumb = None
@@ -93,3 +94,5 @@ async def catch_youtube_dldata(_, q):
         await q.edit_message_text(e)
     finally:
         shutil.rmtree(userdir, ignore_errors=True)  # Cleanup
+    """
+    
