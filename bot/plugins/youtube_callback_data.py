@@ -57,7 +57,7 @@ async def catch_youtube_dldata(_, q):
         logger.info("Media not found")
         return
     
-    return fetch_media
+    return file_name
     """
     thumb = os.path.join(userdir, video_id + ".jpg")
     if not os.path.exists(thumb):
