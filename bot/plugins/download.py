@@ -1,7 +1,8 @@
-import os
-import time
-import asyncio
+import os, time, asyncio, re
+from datetime import datetime, timedelta
 from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup
+from yt_dlp.utils import DownloadError, ExtractorError
 from bot.helpers.sql_helper import gDriveDB, idsDB
 from bot.helpers.utils import CustomFilters, humanbytes
 from bot.helpers.downloader import download_file2, utube_dl
@@ -9,9 +10,13 @@ from bot.helpers.download_from_url import download_file, get_size
 from bot.helpers.gdrive_utils import GoogleDrive
 from bot.helpers.mega_dl import megadl
 from bot import DOWNLOAD_DIRECTORY, LOGGER
-from bot.config import Messages, BotCommands
+from bot.config import Messages, BotCommands, , user_time
 from pyrogram.errors import FloodWait, RPCError
 from bot.helpers.display_progress import progress_for_pyrogram
+
+#from bot import Config, user_time
+from bot.helpers.ffmfunc import fetch_thumb
+from bot.helpers.ytdlfunc import extract_formats
 
 @Client.on_message(filters.private & filters.incoming & filters.text & (filters.command(BotCommands.Download) | filters.regex('^(ht|f)tp*')) & CustomFilters.auth_users)
 async def _download(client, message):
@@ -183,6 +188,8 @@ def _telegram_file(client, message):
     pass
 
 @Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users)
+
+
 def _ytdl(client, message):
   user_id = message.from_user.id
   if len(message.command) > 1:
