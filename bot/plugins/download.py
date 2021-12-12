@@ -10,7 +10,7 @@ from bot.helpers.download_from_url import download_file, get_size
 from bot.helpers.gdrive_utils import GoogleDrive
 from bot.helpers.mega_dl import megadl
 from bot import DOWNLOAD_DIRECTORY, LOGGER
-from bot.config import Messages, BotCommands, config , user_time
+from bot.config import Messages, BotCommands
 from pyrogram.errors import FloodWait, RPCError
 from bot.helpers.display_progress import progress_for_pyrogram
 
