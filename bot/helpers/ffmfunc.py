@@ -2,7 +2,7 @@ import os
 import subprocess
 
 #from ytdlbot import Config
-from bot import DOWNLOAD_DIRECTORY
+from bot.config import config
 
 
 async def fetch_thumb(user_id, thumbnail_url, video_id):
