@@ -13,10 +13,15 @@ ytregex = re.compile(
     r"^((?:https?:)?//)?((?:www|m)\.)?(youtube\.com|youtu.be)(/(?:[\w\-]+\?v=|embed/|v/)?)([\w\-]+)(\S+)?$"
 )
 
-
-@Client.on_message(filters.regex(ytregex))
+#@Client.on_message(filters.regex(ytregex))
+@Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users & filters.regex(ytregex))
 async def ytdl(_, message):
+    
     user_id = message.from_user.id
+    if len(message.command) <= 1:
+        sent_message = message.reply_text('**Error**', quote=True)
+        return
+    #link = message.command[1]
     userLastDownloadTime = user_time.get(user_id)
     if userLastDownloadTime and userLastDownloadTime > datetime.now():
         wait_time = round(
@@ -25,7 +30,7 @@ async def ytdl(_, message):
         await message.reply_text(f"`Wait {wait_time} Minutes before next Request`")
         return
 
-    url = message.text.strip()
+    url = message.command[1].strip()
     await message.reply_chat_action("typing")
     try:
         video_id, thumbnail_url, title, buttons = await extract_formats(url)
