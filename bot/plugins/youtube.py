@@ -21,7 +21,7 @@ async def ytdl(_, message):
     
     user_id = message.from_user.id
     if len(message.command) <= 1:
-        sent_message = message.reply_text('**Error**', quote=True)
+        sent_message = await message.reply_text('**Error**', quote=True)
         return
     #link = message.command[1]
     userLastDownloadTime = user_time.get(user_id)
