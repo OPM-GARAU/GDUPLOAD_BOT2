@@ -34,7 +34,7 @@ async def catch_youtube_dldata(_, q):
         os.makedirs(userdir)
     
     logger.info(f"Downloading...!")
-    #await q.edit_message_caption("Downloading...!")
+    await q.edit_message_caption("Downloading...!")
     # await q.edit_message_reply_markup([[InlineKeyboardButton("Processing..")]])
 
     fetch_media, caption = await yt_download(
