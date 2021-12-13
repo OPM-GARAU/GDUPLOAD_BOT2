@@ -37,6 +37,7 @@ async def _download(client, message):
       await sent_message.edit(msg)
       await message.reply_text(text=f"you can send new task now !")
     elif ('youtube.com' or 'youtu.be') in link:
+      await sent_message.delete()
       await ytdl(client, message)
       return
     elif 'mega.nz' in link:
@@ -315,4 +316,10 @@ async def yt_uploader(client, message , dlpath):
       msg = GoogleDrive(user_id).upload_file(dlpath)
   await sent_message.edit(msg)
   await message.delete()
+  try:
+    os.remove(dlpath)
+    LOGGER.info(f'Deleted: {dlpath}')
+  except:
+    LOGGER.info(f'Deleted: *** Error Occurred ***')
+    pass
   await m.reply_text(text=f"you can send new task now !")
