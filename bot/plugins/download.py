@@ -316,7 +316,7 @@ async def yt_uploader(client, m, dlpath, ytcheck):
   if ytcheck:
     message = m.reply_to_message
     user_id = message.from_user.id
-    sent_message = await if ytcheck:.reply_text(text=f"`uploading 1st ...`", quote=True)
+    sent_message = await message.reply_text(text=f"`uploading 1st ...`", quote=True)
     
   else:
     user_id = m.from_user.id
