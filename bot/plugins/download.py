@@ -49,7 +49,8 @@ async def _download(client, message):
         return
       LOGGER.info(f'SUCCESSFULLY DOWNLOADED . URL: {link} DST_Folder: {file_path}')
       await sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
-      await yt_uploader(client, sent_message , file_path)
+      ytcheck = False
+      await yt_uploader(client, message, file_path, ytcheck)
       """
       msg = GoogleDrive(user_id).upload_file(file_path)
       #await sent_message.edit(msg)
@@ -127,7 +128,8 @@ async def _download(client, message):
           return
       
       LOGGER.info(f'checkpoint')
-      await yt_uploader(client, sent_message , file_path)
+      ytcheck = False
+      await yt_uploader(client, message, file_path, ytcheck)
       """
       msg = GoogleDrive(user_id).upload_file(file_path)
       LOGGER.info(f'USER LOG PRINT : {msg}')
@@ -177,7 +179,8 @@ async def _telegram_file(client, message):
     )
   )
   await sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
-  await yt_uploader(client, sent_message , file_path)
+  ytcheck = False
+  await yt_uploader(client, message, file_path, ytcheck)
   """
   msg = GoogleDrive(user_id).upload_file(file_path, file.mime_type)
   if 'rateLimitExceeded' in msg:
@@ -283,7 +286,8 @@ async def _ru2(client, u):
       sz = humanbytes(os.path.getsize(file_path))
       await sent_message.edit(f"`bbb : uploading ...`\n\n{fn} [{sz}]")
       LOGGER.info(f'bbb : uploading')
-      await yt_uploader(client, sent_message , file_path)
+      ytcheck = False
+      await yt_uploader(client, message, file_path, ytcheck)
       """
       msg = GoogleDrive(user_id).upload_file(file_path)
       LOGGER.info(f'bbb USER LOG PRINT : {msg}')
@@ -307,11 +311,17 @@ async def _ru2(client, u):
         pass
       """
       
-async def yt_uploader(client, message , dlpath):
+async def yt_uploader(client, m, dlpath, ytcheck):
   
-  m = message.reply_to_message
-  user_id = m.from_user.id
-  sent_message = await m.reply_text(text=f"`uploading 1st ...`", quote=True)
+  if ytcheck:
+    message = m.reply_to_message
+    user_id = message.from_user.id
+    sent_message = await if ytcheck:.reply_text(text=f"`uploading 1st ...`", quote=True)
+    
+  else:
+    user_id = m.from_user.id
+    sent_message = await m.reply_text(text=f"`uploading 1st ...`", quote=True)
+  
   msg = GoogleDrive(user_id).upload_file(dlpath)
   if 'rateLimitExceeded' in msg:
     await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
@@ -324,11 +334,15 @@ async def yt_uploader(client, message , dlpath):
       await sent_message.edit(f"`uploading 3rd ...`")
       msg = GoogleDrive(user_id).upload_file(dlpath)
   await sent_message.edit(msg)
-  await message.delete()
+  
   try:
     os.remove(dlpath)
     LOGGER.info(f'Deleted: {dlpath}')
   except:
     LOGGER.info(f'Deleted: *** Error Occurred ***')
     pass
-  await m.reply_text(text=f"you can send new task now !")
+  if ytcheck:
+    await m.delete()
+    await message.reply_text(text=f"you can send new task now !")
+  else:
+    await m.reply_text(text=f"you can send new task now !")
