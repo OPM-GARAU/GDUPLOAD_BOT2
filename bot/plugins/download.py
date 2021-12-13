@@ -13,6 +13,7 @@ from bot import DOWNLOAD_DIRECTORY, LOGGER
 from bot.config import Messages, BotCommands
 from pyrogram.errors import FloodWait, RPCError
 from bot.helpers.display_progress import progress_for_pyrogram
+from bot.plugins.youtube import ytdl
 
 #from bot import Config, user_time
 #from bot.helpers.ffmfunc import fetch_thumb
@@ -35,6 +36,9 @@ async def _download(client, message):
       msg = GoogleDrive(user_id).clone(link)
       await sent_message.edit(msg)
       await message.reply_text(text=f"you can send new task now !")
+    elif ('youtube.com' or 'youtu.be') in link:
+      await ytdl(client, message)
+      return
     elif 'mega.nz' in link:
       LOGGER.info(f'ID:{user_id} URL: {link}')
       file_path = await megadl(client, message, sent_message)
