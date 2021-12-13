@@ -1,8 +1,5 @@
 import os, time, asyncio, re
-#from datetime import datetime, timedelta
 from pyrogram import Client, filters
-#from pyrogram.types import InlineKeyboardMarkup
-#from yt_dlp.utils import DownloadError, ExtractorError
 from bot.helpers.sql_helper import gDriveDB, idsDB
 from bot.helpers.utils import CustomFilters, humanbytes
 from bot.helpers.downloader import download_file2, utube_dl
@@ -14,10 +11,6 @@ from bot.config import Messages, BotCommands
 from pyrogram.errors import FloodWait, RPCError
 from bot.helpers.display_progress import progress_for_pyrogram
 from bot.plugins.youtube import ytdl
-
-#from bot import Config, user_time
-#from bot.helpers.ffmfunc import fetch_thumb
-#from bot.helpers.ytdlfunc import extract_formats
 
 @Client.on_message(filters.private & filters.incoming & filters.text & (filters.command(BotCommands.Download) | filters.regex('^(ht|f)tp*')) & CustomFilters.auth_users)
 async def _download(client, message):
@@ -51,36 +44,7 @@ async def _download(client, message):
       await sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
       ytcheck = False
       await yt_uploader(client, message, file_path, ytcheck)
-      """
-      msg = GoogleDrive(user_id).upload_file(file_path)
-      #await sent_message.edit(msg)
-      #await asyncio.sleep(2)
-      if 'rateLimitExceeded' in msg:
-        LOGGER.info(f'msg : {msg}')
-        await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-        await asyncio.sleep(5)
-        await sent_message.edit(f"`uploading 2nd ...`")
-        msg = GoogleDrive(user_id).upload_file(file_path)
-        await sent_message.edit(msg)
-        if 'rateLimitExceeded' in msg:
-          LOGGER.info(f'msg : {msg}')
-          await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-          await asyncio.sleep(5)
-          await sent_message.edit(f"`uploading 3rd ...`")
-          msg = GoogleDrive(user_id).upload_file(file_path)
-        else:
-          LOGGER.info(f'SUCCESSFULLY UPLOADED TO GDRIVE.')
-      else:
-        LOGGER.info(f'SUCCESSFULLY UPLOADED TO GDRIVE.')
       
-      await sent_message.edit(msg)
-      await message.reply_text(text=f"you can send new task now !")
-      LOGGER.info(f'Deleteing: {file_path}')
-      try:
-        os.remove(file_path)
-      except:
-        pass
-      """
     else:
       if '|' in link:
         link, filename = link.split('|')
@@ -130,28 +94,7 @@ async def _download(client, message):
       LOGGER.info(f'checkpoint')
       ytcheck = False
       await yt_uploader(client, message, file_path, ytcheck)
-      """
-      msg = GoogleDrive(user_id).upload_file(file_path)
-      LOGGER.info(f'USER LOG PRINT : {msg}')
-      await sent_message.edit(f"msg : {msg}")
-      if 'rateLimitExceeded' in msg:
-        await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-        await asyncio.sleep(5)
-        await sent_message.edit(f"`uploading 2nd ...`\n\n{fn} [{sz}]")
-        msg = GoogleDrive(user_id).upload_file(file_path)
-        if 'rateLimitExceeded' in msg:
-          await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-          await asyncio.sleep(5)
-          await sent_message.edit(f"`uploading 3rd ...`\n\n{fn} [{sz}]")
-          msg = GoogleDrive(user_id).upload_file(file_path)
-      await sent_message.edit(msg)
-      await message.reply_text(text=f"you can send new task now !")
-      LOGGER.info(f'Deleteing: {file_path}')
-      try:
-        os.remove(file_path)
-      except:
-        pass 
-      """          
+             
 @Client.on_message(filters.private & filters.incoming & (filters.document | filters.audio | filters.video | filters.photo) & CustomFilters.auth_users)
 async def _telegram_file(client, message):
   user_id = message.from_user.id
@@ -181,63 +124,7 @@ async def _telegram_file(client, message):
   await sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
   ytcheck = False
   await yt_uploader(client, message, file_path, ytcheck)
-  """
-  msg = GoogleDrive(user_id).upload_file(file_path, file.mime_type)
-  if 'rateLimitExceeded' in msg:
-    sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-    time.sleep(5)
-    sent_message.edit(f"`uploading 2nd ...`")
-    msg = GoogleDrive(user_id).upload_file(file_path, file.mime_type)
-    if 'rateLimitExceeded' in msg:
-      sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-      time.sleep(5)
-      sent_message.edit(f"`uploading 3rd ...`")
-      msg = GoogleDrive(user_id).upload_file(file_path, file.mime_type)
-  sent_message.edit(msg)
-  message.reply_text(text=f"you can send new task now !")
-  LOGGER.info(f'Deleteing: {file_path}')
-  try:
-    os.remove(file_path)
-  except:
-    pass
-  """
-"""
-@Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users)
-
-
-def _ytdl(client, message):
-  user_id = message.from_user.id
-  if len(message.command) > 1:
-    sent_message = message.reply_text('🕵️**Checking Link...**', quote=True)
-    link = message.command[1]
-    LOGGER.info(f'YTDL:{user_id}: {link}')
-    sent_message.edit(Messages.DOWNLOADING.format(link))
-    result, file_path = utube_dl(link)
-    if result:
-      sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
-      msg = GoogleDrive(user_id).upload_file(file_path)
-      if 'rateLimitExceeded' in msg:
-        sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-        time.sleep(5)
-        sent_message.edit(f"`uploading 2nd ...`")
-        msg = GoogleDrive(user_id).upload_file(file_path)
-        if 'rateLimitExceeded' in msg:
-          sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-          time.sleep(5)
-          sent_message.edit(f"`uploading 3rd ...`")
-          msg = GoogleDrive(user_id).upload_file(file_path)
-      sent_message.edit(msg)
-      message.reply_text(text=f"you can send new task now !")
-      LOGGER.info(f'Deleteing: {file_path}')
-      try:
-        os.remove(file_path)
-      except:
-        pass
-    else:
-      sent_message.edit(Messages.DOWNLOAD_ERROR.format(file_path, link))
-  else:
-    message.reply_text(Messages.PROVIDE_YTDL_LINK, quote=True)
-"""
+  
 @Client.on_message(filters.incoming & filters.private & filters.command(["bbb"]) & CustomFilters.auth_users)
 async def _ru2(client, u):
   if not u.reply_to_message:
@@ -288,28 +175,6 @@ async def _ru2(client, u):
       LOGGER.info(f'bbb : uploading')
       ytcheck = False
       await yt_uploader(client, message, file_path, ytcheck)
-      """
-      msg = GoogleDrive(user_id).upload_file(file_path)
-      LOGGER.info(f'bbb USER LOG PRINT : {msg}')
-      await sent_message.edit(f"msg : {msg}")
-      if 'rateLimitExceeded' in msg:
-        await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-        await asyncio.sleep(5)
-        await sent_message.edit(f"`uploading 2nd ...`\n\n{fn} [{sz}]")
-        msg = GoogleDrive(user_id).upload_file(file_path)
-        if 'rateLimitExceeded' in msg:
-          await sent_message.edit(f"{msg}\n\n trying again in 5 sec")
-          await asyncio.sleep(5)
-          await sent_message.edit(f"`uploading 3rd ...`\n\n{fn} [{sz}]")
-          msg = GoogleDrive(user_id).upload_file(file_path)
-      await sent_message.edit(msg)
-      await message.reply_text(text=f"you can send new task now !")
-      try:
-        os.remove(file_path)
-        LOGGER.info(f'bbb Deleted: {file_path}')
-      except:
-        pass
-      """
       
 async def yt_uploader(client, m, dlpath, ytcheck):
   
@@ -346,3 +211,4 @@ async def yt_uploader(client, m, dlpath, ytcheck):
     await message.reply_text(text=f"you can send new task now !")
   else:
     await m.reply_text(text=f"you can send new task now !")
+  return
