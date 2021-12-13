@@ -58,7 +58,7 @@ async def catch_youtube_dldata(_, q):
         logger.info("Media not found")
         return
     
-    await q.edit_message_caption(f"**uploading to gd**\n\nFile: `{file_name}`")
+    await q.edit_message_caption(f"download finished .")
     await yt_uploader(_ , q.message , file_name)
     """
     thumb = os.path.join(userdir, video_id + ".jpg")
