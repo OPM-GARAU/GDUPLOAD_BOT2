@@ -49,7 +49,8 @@ async def _download(client, message):
         return
       LOGGER.info(f'SUCCESSFULLY DOWNLOADED . URL: {link} DST_Folder: {file_path}')
       await sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
-      
+      await yt_uploader(client, sent_message , file_path)
+      """
       msg = GoogleDrive(user_id).upload_file(file_path)
       #await sent_message.edit(msg)
       #await asyncio.sleep(2)
@@ -78,6 +79,7 @@ async def _download(client, message):
         os.remove(file_path)
       except:
         pass
+      """
     else:
       if '|' in link:
         link, filename = link.split('|')
@@ -125,6 +127,8 @@ async def _download(client, message):
           return
       
       LOGGER.info(f'checkpoint')
+      await yt_uploader(client, sent_message , file_path)
+      """
       msg = GoogleDrive(user_id).upload_file(file_path)
       LOGGER.info(f'USER LOG PRINT : {msg}')
       await sent_message.edit(f"msg : {msg}")
@@ -145,11 +149,11 @@ async def _download(client, message):
         os.remove(file_path)
       except:
         pass 
-                
+      """          
 @Client.on_message(filters.private & filters.incoming & (filters.document | filters.audio | filters.video | filters.photo) & CustomFilters.auth_users)
-def _telegram_file(client, message):
+async def _telegram_file(client, message):
   user_id = message.from_user.id
-  sent_message = message.reply_text('🕵️**Checking File...**', quote=True)
+  await sent_message = message.reply_text('🕵️**Checking File...**', quote=True)
   if message.document:
     file = message.document
   elif message.video:
@@ -160,10 +164,10 @@ def _telegram_file(client, message):
   	file = message.photo
   	file.mime_type = "images/png"
   	file.file_name = f"IMG-{user_id}-{message.message_id}.png"
-  sent_message.edit(Messages.DOWNLOAD_TG_FILE.format(file.file_name, humanbytes(file.file_size), file.mime_type))
+  await sent_message.edit(Messages.DOWNLOAD_TG_FILE.format(file.file_name, humanbytes(file.file_size), file.mime_type))
   LOGGER.info(f'Download:{user_id}: {file.file_id}')
   c_time = time.time()
-  file_path = message.download(
+  file_path = await message.download(
     file_name=DOWNLOAD_DIRECTORY,
     progress=progress_for_pyrogram,
     progress_args=(
@@ -172,7 +176,9 @@ def _telegram_file(client, message):
       c_time
     )
   )
-  sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
+  await sent_message.edit(Messages.DOWNLOADED_SUCCESSFULLY.format(os.path.basename(file_path), humanbytes(os.path.getsize(file_path))))
+  await yt_uploader(client, sent_message , file_path)
+  """
   msg = GoogleDrive(user_id).upload_file(file_path, file.mime_type)
   if 'rateLimitExceeded' in msg:
     sent_message.edit(f"{msg}\n\n trying again in 5 sec")
@@ -191,6 +197,7 @@ def _telegram_file(client, message):
     os.remove(file_path)
   except:
     pass
+  """
 """
 @Client.on_message(filters.incoming & filters.private & filters.command(BotCommands.YtDl) & CustomFilters.auth_users)
 
@@ -276,6 +283,8 @@ async def _ru2(client, u):
       sz = humanbytes(os.path.getsize(file_path))
       await sent_message.edit(f"`bbb : uploading ...`\n\n{fn} [{sz}]")
       LOGGER.info(f'bbb : uploading')
+      await yt_uploader(client, sent_message , file_path)
+      """
       msg = GoogleDrive(user_id).upload_file(file_path)
       LOGGER.info(f'bbb USER LOG PRINT : {msg}')
       await sent_message.edit(f"msg : {msg}")
@@ -296,7 +305,7 @@ async def _ru2(client, u):
         LOGGER.info(f'bbb Deleted: {file_path}')
       except:
         pass
-
+      """
       
 async def yt_uploader(client, message , dlpath):
   
