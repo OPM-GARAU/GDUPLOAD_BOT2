@@ -20,6 +20,12 @@ ytregex = re.compile(
 async def ytdl(_, message):
     
     user_id = message.from_user.id
+    
+    if "/ytdl" in message.text:
+        pass
+    else:
+        message.text = "/ytdl" + message.text
+    
     if len(message.command) <= 1:
         sent_message = await message.reply_text('**Error**', quote=True)
         return
