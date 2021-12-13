@@ -35,9 +35,46 @@ async def extract_formats(yturl):
         download=False,
         ytdl_opts={"extractor_args": {"youtube": {"skip": ["dash", "hls"]}}},
     )
+    
+    for listed in info.get("formats"):
+        if listed.get("acodec") == "none":
+            continue
+        media_type = "Audio" if "audio" in listed.get("format") else "Video"
+        
+        if "audio" in listed.get("format"):
+            first = str(listed.get("format_id")) + " - Audio"
+        else:
+            first = listed.get("format")
+        
+        #format_note = listed.get("format_note", "format")
+        format_note = listed.get("ext")
+        # SpEcHiDe/AnyDLBot/anydlbot/plugins/youtube_dl_echo.py#L112
+        
+        if listed.get("filesize"):
+            filesize = humanbytes(listed.get("filesize"))
+        elif listed.get("filesize_approx"):
+            filesize = humanbytes(listed.get("filesize_approx"))
+        else:
+            filesize = "null"
+        
+        acodec = listed.get("acodec")
+        av_codec = "empty"
+        if listed.get("acodec") == "none" or listed.get("vcodec") == "none":
+            av_codec = "none"
+        buttons.append(
+            [
+                InlineKeyboardButton(
+                    f"{first} [{format_note}] [{filesize}] {acodec}",
+                    f"{media_type}_{listed['format_id']}_{av_codec}_{info['id']}",
+                )
+            ]
+        )
+
+    return info.get("id"), info.get("thumbnail"), info.get("title"), buttons
+    
     """template = make_template(
         info.get("title"), info.get("duration"), info.get("upload_date")
-    )"""
+    ) 
     for listed in info.get("formats"):
         media_type = "Audio" if "audio" in listed.get("format") else "Video"
         format_note = listed.get("format_note", "format")
@@ -58,7 +95,7 @@ async def extract_formats(yturl):
         )
 
     return info.get("id"), info.get("thumbnail"), info.get("title"), buttons
-
+    """
 
 # The codes below were referenced after
 # https://github.com/eyaadh/megadlbot_oss/blob/master/mega/helpers/ytdl.py
