@@ -20,16 +20,16 @@ ytregex = re.compile(
 async def ytdl(_, message):
     
     user_id = message.from_user.id
-    
+    """
     if "/ytdl" in message.text:
         pass
     else:
         message.text = "/ytdl " + message.text
-    
-    if len(message.command) <= 1:
+    """
+    if len(message.command) and len(message.command) <= 1:
         sent_message = await message.reply_text('**Error**', quote=True)
         return
-    #link = message.command[1]
+
     userLastDownloadTime = user_time.get(user_id)
     if userLastDownloadTime and userLastDownloadTime > datetime.now():
         wait_time = round(
@@ -38,7 +38,11 @@ async def ytdl(_, message):
         await message.reply_text(f"`Wait {wait_time} Minutes before next Request`")
         return
 
-    url = message.command[1].strip()
+    if message.command:
+        url = message.command[1].strip()
+    else:
+        url = message.text.strip()
+        
     await message.reply_chat_action("typing")
     try:
         video_id, thumbnail_url, title, buttons = await extract_formats(url)
