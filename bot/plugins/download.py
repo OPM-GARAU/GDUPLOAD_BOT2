@@ -153,7 +153,7 @@ async def _download(client, message):
 @Client.on_message(filters.private & filters.incoming & (filters.document | filters.audio | filters.video | filters.photo) & CustomFilters.auth_users)
 async def _telegram_file(client, message):
   user_id = message.from_user.id
-  await sent_message = message.reply_text('🕵️**Checking File...**', quote=True)
+  await sent_message = await message.reply_text('🕵️**Checking File...**', quote=True)
   if message.document:
     file = message.document
   elif message.video:
