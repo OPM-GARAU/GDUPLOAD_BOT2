@@ -65,7 +65,7 @@ async def catch_youtube_dldata(_, q):
         cfname = qt.split("|", 1)[1]
         cfname = cfname.strip()
         cfname = cfname.replace('%40','@')
-        cfname = os.path.join(file_name, cfname)
+        cfname = os.path.join(userdir, cfname)
         Path(file_name).rename(cfname)
     else:
         cfname = file_name
