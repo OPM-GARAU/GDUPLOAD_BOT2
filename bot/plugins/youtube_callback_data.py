@@ -1,5 +1,5 @@
 import asyncio, logging, os, re, shutil
-
+from pathlib import Path
 from pyrogram import Client, filters
 from pyrogram.types import (
     InputMediaAudio,
@@ -18,6 +18,8 @@ ytdata = re.compile(r"^(Video|Audio)_(\d{1,3})_(empty|none)_([\w\-]+)$")
 
 @Client.on_callback_query(filters.regex(ytdata))
 async def catch_youtube_dldata(_, q):
+    qq = q.message
+    qr = q.message.reply_to_message
     cb_data = q.data
     logger.info(cb_data)
     # caption = q.message.caption
@@ -58,6 +60,13 @@ async def catch_youtube_dldata(_, q):
         logger.info("Media not found")
         return
     
+    qt = qr.text
+    if "|" in qt:
+        cfname = qt.split("|", 1)[1]
+        cfname = cfname.strip()
+        cfname = cfname.replace('%40','@')
+    cfname = os.path.join(file_name, cfname)
+    Path(file_name).rename(cfname)
     await q.edit_message_caption(f"download finished .")
     ytcheck = True
     await yt_uploader(_, q.message, file_name, ytcheck)
