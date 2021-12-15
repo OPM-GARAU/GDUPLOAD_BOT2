@@ -65,11 +65,13 @@ async def catch_youtube_dldata(_, q):
         cfname = qt.split("|", 1)[1]
         cfname = cfname.strip()
         cfname = cfname.replace('%40','@')
-    cfname = os.path.join(file_name, cfname)
-    Path(file_name).rename(cfname)
+        cfname = os.path.join(file_name, cfname)
+        Path(file_name).rename(cfname)
+    else:
+        cfname = file_name
     await q.edit_message_caption(f"download finished .")
     ytcheck = True
-    await yt_uploader(_, q.message, file_name, ytcheck)
+    await yt_uploader(_, q.message, cfname, ytcheck)
     """
     thumb = os.path.join(userdir, video_id + ".jpg")
     if not os.path.exists(thumb):
