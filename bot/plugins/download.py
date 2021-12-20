@@ -29,7 +29,7 @@ async def _download(client, message):
       msg = GoogleDrive(user_id).clone(link)
       await sent_message.edit(msg)
       await message.reply_text(text=f"you can send new task now !")
-    elif ('youtube.com' or 'youtu.be') in link:
+    elif ("youtube.com" in link) or ("youtu.be" in link):
       await sent_message.delete()
       await ytdl(client, message)
       return
