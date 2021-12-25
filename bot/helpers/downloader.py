@@ -1,18 +1,27 @@
-import os
-import wget
-import glob
-import youtube_dl
+import os, wget, glob, functools, logging
+from concurrent.futures import ThreadPoolExecutor
 from pySmartDL import SmartDL
 from urllib.error import HTTPError
 from youtube_dl import DownloadError
-from bot import DOWNLOAD_DIRECTORY, LOGGER
+from bot import DOWNLOAD_DIRECTORY
 
+logger = logging.getLogger(__name__)
 
+# https://stackoverflow.com/a/64506715
+def run_in_executor(_func):
+    @functools.wraps(_func)
+    async def wrapped(*args, **kwargs):
+        loop = asyncio.get_event_loop()
+        func = functools.partial(_func, *args, **kwargs)
+        return await loop.run_in_executor(executor=ThreadPoolExecutor(), func=func)
+    return wrapped
+
+@run_in_executor
 def download_file2(url, dl_path):
   
   sw1 = "aaa"
   dl = SmartDL(url, dl_path, progress_bar=False)
-  LOGGER.info(f'Downloading: {url} in {dl_path}')
+  logger.info(f'Downloading: {url} in {dl_path}')
   dl.start()
   dl.get_dest()
   sz = os.path.getsize(dl_path)
@@ -29,21 +38,3 @@ def download_file2(url, dl_path):
     else:
       return False, "Erorr"
 
-def utube_dl(link):
-  ytdl_opts = {
-    'outtmpl' : os.path.join(DOWNLOAD_DIRECTORY, '%(title)s'),
-    'noplaylist' : True,
-    'logger': LOGGER,
-    'format': 'bestvideo+bestaudio/best',
-    'geo_bypass_country': 'IN'
-  }
-  with youtube_dl.YoutubeDL(ytdl_opts) as ytdl:
-    try:
-      meta = ytdl.extract_info(link, download=True)
-    except DownloadError as e:
-      return False, str(e)
-    for path in glob.glob(os.path.join(DOWNLOAD_DIRECTORY, '*')):
-      if path.endswith(('.avi', '.mov', '.flv', '.wmv', '.3gp','.mpeg', '.webm', '.mp4', '.mkv')) and \
-          path.startswith(ytdl.prepare_filename(meta)):
-        return True, path
-    return False, 'Something went wrong! No video file exists on server.'
