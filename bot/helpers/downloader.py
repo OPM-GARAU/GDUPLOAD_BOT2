@@ -24,16 +24,14 @@ def download_file2(url, dl_path):
   logger.info(f'Downloading: {url} in {dl_path}')
   dl.start()
   dl.get_dest()
-  sz = os.path.getsize(dl_path)
-  if sz:
+  if os.path.exists(dl_path):
     return True, dl_path
   else:
     sw1 = "bbb"
   
   if sw1 == "bbb":
     wget.download(url, dl_path)
-    sz = os.path.getsize(dl_path)
-    if sz:
+    if os.path.exists(dl_path):
       return True, dl_path
     else:
       return False, "Erorr"
