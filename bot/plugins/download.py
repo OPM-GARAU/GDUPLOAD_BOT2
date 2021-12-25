@@ -59,7 +59,7 @@ async def _download(client, message):
 
       await sent_message.edit(Messages.DOWNLOADING.format(link))
       
-      result, file_path = download_file2(link, dl_path)
+      result, file_path = await download_file2(link, dl_path)
       if result == True:
         fn = os.path.basename(file_path)
         sz = humanbytes(os.path.getsize(file_path))
