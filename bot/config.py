@@ -2,14 +2,14 @@ users = {}
 user_time = {}
 
 class config:
-    BOT_TOKEN = ""
-    APP_ID = ""
-    API_HASH = ""
-    DATABASE_URL = ""
-    SUDO_USERS = "" # Sepearted by space.
+    BOT_TOKEN = "5304864835:AAFqdsWpe_23m6n9YNOZTxr8reI_rO-ZOEM"
+    APP_ID = "15830671"
+    API_HASH = "5082e22280f997daf4fc09ade0a2c70f"
+    DATABASE_URL = "postgres://xiiiugnzfdupia:dc053bb34acd2e29efd41492434764263be6999e26580a770d1424d8c2ed2fd1@ec2-52-73-155-171.compute-1.amazonaws.com:5432/da3jlnm5alvgsd"
+    SUDO_USERS = "633799917" # Sepearted by space.
     DOWNLOAD_DIRECTORY = "downloads/"
-    G_DRIVE_CLIENT_ID = ""
-    G_DRIVE_CLIENT_SECRET = ""
+    G_DRIVE_CLIENT_ID = "922397329187-c3atk02brqsusdckjrqltckoso5rdht5.apps.googleusercontent.com"
+    G_DRIVE_CLIENT_SECRET = "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"
     SUPPORT_CHAT_LINK = ""
     TIMEOUT = 0
     MAX_SIZE = 9 * 1024 * 1024 * 1024
